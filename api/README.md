@@ -7,7 +7,7 @@
 - Using gradle: ```gradle test```
 - Report can be found here: ```build/reports/tests/test/index.html```
 
-## Endpoints
+## Endpoints (supports json/xml media types)
 - localhost:8080/trades GET
 - localhost:8080/trades POST
 - see ```TradeResource``` and ```MarketplaceAPIAcceptanceTest``` for examples
