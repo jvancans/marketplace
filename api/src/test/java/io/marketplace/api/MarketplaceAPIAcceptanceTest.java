@@ -2,7 +2,6 @@ package io.marketplace.api;
 
 import io.marketplace.api.trade.model.CompletedTrade;
 import io.marketplace.api.trade.model.TradeOrder;
-import io.marketplace.api.trade.model.TradeProduct;
 import io.marketplace.api.trade.model.TradeType;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -24,7 +23,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringRunner.class)
 @FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class MarketplaceAPITests {
+public class MarketplaceAPIAcceptanceTest extends BaseTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -137,13 +136,5 @@ public class MarketplaceAPITests {
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         return new HttpEntity<>(obj, headers);
-    }
-
-    private TradeOrder stubOrder(TradeType type, BigDecimal price) {
-        TradeOrder tradeOrder = new TradeOrder();
-        tradeOrder.setProduct(TradeProduct.PUMPKIN);
-        tradeOrder.setType(type);
-        tradeOrder.setPrice(price);
-        return tradeOrder;
     }
 }
