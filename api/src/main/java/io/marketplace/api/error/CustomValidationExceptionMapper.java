@@ -31,7 +31,6 @@ public class CustomValidationExceptionMapper implements ExceptionMapper<Validati
                     .type(resolveMediaType(request))
                     .entity(new ValidationErrorResponse(mapErrors(cve)))
                     .build();
-
         } else {
             return Response
                     .serverError()

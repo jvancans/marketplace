@@ -1,4 +1,4 @@
-package io.marketplace.api.order.model;
+package io.marketplace.api.trade.model;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
@@ -8,29 +8,29 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @XmlRootElement
-public class OrderRequest {
-    @NotNull(message = "{OrderRequest.item.null}")
-    private OrderItem item;
-    @NotNull(message = "{OrderRequest.type.null}")
-    private OrderType type;
-    @NotNull(message = "{OrderRequest.price.null}")
-    @DecimalMin(value = "0.01", message = "{OrderRequest.price.min}")
+public class TradeOrder {
+    @NotNull(message = "{TradeOrder.product.null}")
+    private TradeProduct product;
+    @NotNull(message = "{TradeOrder.type.null}")
+    private TradeType type;
+    @NotNull(message = "{TradeOrder.price.null}")
+    @DecimalMin(value = "0.01", message = "{TradeOrder.price.min}")
     private BigDecimal price;
     private final LocalDateTime created = LocalDateTime.now();
 
-    public OrderItem getItem() {
-        return item;
+    public TradeProduct getProduct() {
+        return product;
     }
 
-    public void setItem(OrderItem item) {
-        this.item = item;
+    public void setProduct(TradeProduct product) {
+        this.product = product;
     }
 
-    public OrderType getType() {
+    public TradeType getType() {
         return type;
     }
 
-    public void setType(OrderType type) {
+    public void setType(TradeType type) {
         this.type = type;
     }
 
@@ -50,8 +50,8 @@ public class OrderRequest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrderRequest that = (OrderRequest) o;
-        return item == that.item &&
+        TradeOrder that = (TradeOrder) o;
+        return product == that.product &&
                 type == that.type &&
                 Objects.equals(price, that.price) &&
                 Objects.equals(created, that.created);
@@ -59,6 +59,6 @@ public class OrderRequest {
 
     @Override
     public int hashCode() {
-        return Objects.hash(item, type, price, created);
+        return Objects.hash(product, type, price, created);
     }
 }

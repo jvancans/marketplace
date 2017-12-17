@@ -1,6 +1,6 @@
-package io.marketplace.api.order;
+package io.marketplace.api.trade;
 
-import io.marketplace.api.order.model.OrderRequest;
+import io.marketplace.api.trade.model.TradeOrder;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -10,21 +10,21 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-@Path("orders")
-public class OrderResource {
+@Path("trades")
+public class TradeResource {
     @Inject
-    private OrderService service;
+    private TradeService service;
 
     @GET
-    public Response listOrders() {
+    public Response completedTrades() {
         return Response
-                .ok(service.listOrders())
+                .ok(service.completedTrades())
                 .build();
     }
 
     @POST
-    public Response placeOrder(@Valid @NotNull(message = "{OrderResource.request.null}") OrderRequest orderRequest) {
-        boolean orderMatched = service.placeOrder(orderRequest);
+    public Response placeOrder(@Valid @NotNull(message = "{TradeResource.order.null}") TradeOrder tradeOrder) {
+        boolean orderMatched = service.placeOrder(tradeOrder);
         return Response
                 .status(resolveStatus(orderMatched))
                 .build();

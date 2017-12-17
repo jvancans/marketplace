@@ -1,9 +1,9 @@
 package io.marketplace.api;
 
-import io.marketplace.api.order.model.OrderItem;
-import io.marketplace.api.order.model.OrderOverview;
-import io.marketplace.api.order.model.OrderRequest;
-import io.marketplace.api.order.model.OrderType;
+import io.marketplace.api.trade.model.CompletedTrade;
+import io.marketplace.api.trade.model.TradeOrder;
+import io.marketplace.api.trade.model.TradeProduct;
+import io.marketplace.api.trade.model.TradeType;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,45 +30,45 @@ public class MarketplaceAPITests {
 
     @Test
     public void test0BuyOrderEnqueued() {
-        OrderRequest A_clientRequest = stubOrder(OrderType.BUY, BigDecimal.TEN);
-        ResponseEntity A_clientResponse = restTemplate.postForEntity("/orders", entity(A_clientRequest), ResponseEntity.class);
+        TradeOrder A_clientRequest = stubOrder(TradeType.BUY, BigDecimal.TEN);
+        ResponseEntity A_clientResponse = restTemplate.postForEntity("/trades", entity(A_clientRequest), ResponseEntity.class);
         assertThat(A_clientResponse.getStatusCode(), equalTo(HttpStatus.ACCEPTED));
     }
 
     @Test
     public void test1BuyOrderEnqueued() {
-        OrderRequest B_clientRequest = stubOrder(OrderType.BUY, BigDecimal.valueOf(11));
-        ResponseEntity B_clientResponse = restTemplate.postForEntity("/orders", entity(B_clientRequest), ResponseEntity.class);
+        TradeOrder B_clientRequest = stubOrder(TradeType.BUY, BigDecimal.valueOf(11));
+        ResponseEntity B_clientResponse = restTemplate.postForEntity("/trades", entity(B_clientRequest), ResponseEntity.class);
         assertThat(B_clientResponse.getStatusCode(), equalTo(HttpStatus.ACCEPTED));
     }
 
     @Test
     public void test2SellOrderEnqueued() {
-        OrderRequest C_clientRequest = stubOrder(OrderType.SELL, BigDecimal.valueOf(15));
-        ResponseEntity C_clientResponse = restTemplate.postForEntity("/orders", entity(C_clientRequest), ResponseEntity.class);
+        TradeOrder C_clientRequest = stubOrder(TradeType.SELL, BigDecimal.valueOf(15));
+        ResponseEntity C_clientResponse = restTemplate.postForEntity("/trades", entity(C_clientRequest), ResponseEntity.class);
         assertThat(C_clientResponse.getStatusCode(), equalTo(HttpStatus.ACCEPTED));
     }
 
     @Test
     public void test3SellOrderCompleted() {
-        OrderRequest D_clientRequest = stubOrder(OrderType.SELL, BigDecimal.valueOf(9));
-        ResponseEntity D_clientResponse = restTemplate.postForEntity("/orders", entity(D_clientRequest), ResponseEntity.class);
+        TradeOrder D_clientRequest = stubOrder(TradeType.SELL, BigDecimal.valueOf(9));
+        ResponseEntity D_clientResponse = restTemplate.postForEntity("/trades", entity(D_clientRequest), ResponseEntity.class);
         assertThat(D_clientResponse.getStatusCode(), equalTo(HttpStatus.OK));
     }
 
     @Test
     public void test4CompletedOrderListContainsTradeBetweenDAndB() {
-        List<OrderOverview> allOrders = restTemplate.exchange("/orders", HttpMethod.GET, null, new ParameterizedTypeReference<List<OrderOverview>>() {
+        List<CompletedTrade> allOrders = restTemplate.exchange("/trades", HttpMethod.GET, null, new ParameterizedTypeReference<List<CompletedTrade>>() {
         }).getBody();
         assertThat(allOrders, hasItem(
                 allOf(
                         hasProperty("buyOrder", allOf(
                                 hasProperty("price", equalTo(BigDecimal.valueOf(11))),
-                                hasProperty("type", equalTo(OrderType.BUY)))
+                                hasProperty("type", equalTo(TradeType.BUY)))
                         ),
                         hasProperty("sellOrder", allOf(
                                 hasProperty("price", equalTo(BigDecimal.valueOf(9))),
-                                hasProperty("type", equalTo(OrderType.SELL))
+                                hasProperty("type", equalTo(TradeType.SELL))
                         ))
                 )
         ));
@@ -76,32 +76,32 @@ public class MarketplaceAPITests {
 
     @Test
     public void test5BuyOrderEnqueued() {
-        OrderRequest E_clientRequest = stubOrder(OrderType.BUY, BigDecimal.TEN);
-        ResponseEntity E_clientResponse = restTemplate.postForEntity("/orders", entity(E_clientRequest), ResponseEntity.class);
+        TradeOrder E_clientRequest = stubOrder(TradeType.BUY, BigDecimal.TEN);
+        ResponseEntity E_clientResponse = restTemplate.postForEntity("/trades", entity(E_clientRequest), ResponseEntity.class);
         assertThat(E_clientResponse.getStatusCode(), equalTo(HttpStatus.ACCEPTED));
     }
 
     @Test
     public void test6SellOrderCompleted() {
-        OrderRequest F_clientRequest = stubOrder(OrderType.SELL, BigDecimal.TEN);
-        ResponseEntity F_clientResponse = restTemplate.postForEntity("/orders", entity(F_clientRequest), ResponseEntity.class);
+        TradeOrder F_clientRequest = stubOrder(TradeType.SELL, BigDecimal.TEN);
+        ResponseEntity F_clientResponse = restTemplate.postForEntity("/trades", entity(F_clientRequest), ResponseEntity.class);
         assertThat(F_clientResponse.getStatusCode(), equalTo(HttpStatus.OK));
     }
 
     @Test
     public void test7CompletedOrderListContainsTradeBetweenFAndA() {
-        List<OrderOverview> allOrders = restTemplate.exchange("/orders", HttpMethod.GET, null, new ParameterizedTypeReference<List<OrderOverview>>() {
+        List<CompletedTrade> allOrders = restTemplate.exchange("/trades", HttpMethod.GET, null, new ParameterizedTypeReference<List<CompletedTrade>>() {
         }).getBody();
 
         assertThat(allOrders, hasItem(
                 allOf(
                         hasProperty("buyOrder", allOf(
                                 hasProperty("price", equalTo(BigDecimal.TEN)),
-                                hasProperty("type", equalTo(OrderType.BUY)))
+                                hasProperty("type", equalTo(TradeType.BUY)))
                         ),
                         hasProperty("sellOrder", allOf(
                                 hasProperty("price", equalTo(BigDecimal.TEN)),
-                                hasProperty("type", equalTo(OrderType.SELL))
+                                hasProperty("type", equalTo(TradeType.SELL))
                         ))
                 )
         ));
@@ -109,24 +109,24 @@ public class MarketplaceAPITests {
 
     @Test
     public void test8BuyOrderCompleted() {
-        OrderRequest G_clientRequest = stubOrder(OrderType.BUY, BigDecimal.valueOf(100));
-        ResponseEntity G_clientResponse = restTemplate.postForEntity("/orders", entity(G_clientRequest), ResponseEntity.class);
+        TradeOrder G_clientRequest = stubOrder(TradeType.BUY, BigDecimal.valueOf(100));
+        ResponseEntity G_clientResponse = restTemplate.postForEntity("/trades", entity(G_clientRequest), ResponseEntity.class);
         assertThat(G_clientResponse.getStatusCode(), equalTo(HttpStatus.OK));
     }
 
     @Test
     public void test9CompletedOrderListContainsTradeBetweenCAndG() {
-        List<OrderOverview> allOrders = restTemplate.exchange("/orders", HttpMethod.GET, null, new ParameterizedTypeReference<List<OrderOverview>>() {
+        List<CompletedTrade> allOrders = restTemplate.exchange("/trades", HttpMethod.GET, null, new ParameterizedTypeReference<List<CompletedTrade>>() {
         }).getBody();
         assertThat(allOrders, hasItem(
                 allOf(
                         hasProperty("buyOrder", allOf(
                                 hasProperty("price", equalTo(BigDecimal.valueOf(100))),
-                                hasProperty("type", equalTo(OrderType.BUY)))
+                                hasProperty("type", equalTo(TradeType.BUY)))
                         ),
                         hasProperty("sellOrder", allOf(
                                 hasProperty("price", equalTo(BigDecimal.valueOf(15))),
-                                hasProperty("type", equalTo(OrderType.SELL))
+                                hasProperty("type", equalTo(TradeType.SELL))
                         ))
                 )
         ));
@@ -139,11 +139,11 @@ public class MarketplaceAPITests {
         return new HttpEntity<>(obj, headers);
     }
 
-    private OrderRequest stubOrder(OrderType type, BigDecimal price) {
-        OrderRequest orderRequest = new OrderRequest();
-        orderRequest.setItem(OrderItem.PUMPKIN);
-        orderRequest.setType(type);
-        orderRequest.setPrice(price);
-        return orderRequest;
+    private TradeOrder stubOrder(TradeType type, BigDecimal price) {
+        TradeOrder tradeOrder = new TradeOrder();
+        tradeOrder.setProduct(TradeProduct.PUMPKIN);
+        tradeOrder.setType(type);
+        tradeOrder.setPrice(price);
+        return tradeOrder;
     }
 }
