@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 @Component
 public class TradeService {
+    private final Object syncObject = new Object();
     private final BlockingQueue<TradeOrder> enqueued = new LinkedBlockingDeque<>();
     private final LinkedList<CompletedTrade> completed = new LinkedList<>();
 
@@ -20,7 +21,7 @@ public class TradeService {
     }
 
     boolean placeOrder(TradeOrder incomingOrder) {
-        synchronized (enqueued) {
+        synchronized (syncObject) {
             boolean orderMatched;
             Optional<TradeOrder> optionalMatch = findMatchingOrder(incomingOrder);
             if (optionalMatch.isPresent()) {
